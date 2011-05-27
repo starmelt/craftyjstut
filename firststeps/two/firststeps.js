@@ -4,17 +4,16 @@ window.onload = (function() {
     Crafty.init(WIDTH, HEIGHT);
     Crafty.canvas();
 
+    Crafty.sprite(32, "../../img/crate.png", { crate: [0, 0]});
+
     Crafty.c("Box", {
         init: function() {
-            this.addComponent("2D, Canvas, Color, Fourway, Mouse, Tween");
+            this.addComponent("2D, Canvas, Color, Fourway, Mouse, Tween, crate");
             
             this.w = 32;
             this.h = 32;
             this.fourway(10);
             
-            this.bind("draw", function(obj) {
-                this._draw(obj.ctx, obj.pos);
-            });
             this.bind("enterframe", function(e) {
                 if (this._alpha < 0.1) {
                     this.destroy();
@@ -25,33 +24,14 @@ window.onload = (function() {
                 this.tween({alpha: 0.0}, 50);
             });
         },
-        _draw: function(ctx, po) {
-            var pos = {_x: po._x + 1, _y: po._y + 1, _w: po._w - 2, _h: po._h -2};
-            
-            ctx.fillStyle = this._color;
-            ctx.fillRect(pos._x, pos._y, pos._w, pos._h);
-            
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "rgb(0,0,0)";
-            ctx.beginPath();
-            ctx.moveTo(pos._x, pos._y);
-            ctx.lineTo(pos._x + pos._w, pos._y);
-            ctx.lineTo(pos._x + pos._w, pos._y +  pos._h);
-            ctx.lineTo(pos._x, pos._y +  pos._h);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.moveTo(pos._x, pos._y);
-            ctx.lineTo(pos._x + pos._w, pos._y +  pos._h);
-            ctx.stroke();
-            ctx.moveTo(pos._x + pos._w, pos._y);
-            ctx.lineTo(pos._x, pos._y +  pos._h);
-            ctx.stroke();
+        makeBox: function(x, y, color) {
+            this.attr({x: x, y: y}).color(color);
         }
     });
     
-    Crafty.e("Box").attr({x: 160, y: 96}).color("#F00");
-    Crafty.e("Box").attr({x: 240, y: 96}).color("#0F0");
-    Crafty.e("Box").attr({x: 320, y: 96}).color("#FF0");
-    Crafty.e("Box").attr({x: 400, y: 96}).color("#F0F");
-    Crafty.e("Box").attr({x: 480, y: 96}).color("#0FF");
+    Crafty.e("Box").makeBox(160, 96, "#F00");
+    Crafty.e("Box").makeBox(240, 96, "#0F0");
+    Crafty.e("Box").makeBox(320, 96, "#FF0");
+    Crafty.e("Box").makeBox(400, 96, "#F0F");
+    Crafty.e("Box").makeBox(480, 96, "#0FF");
 });
