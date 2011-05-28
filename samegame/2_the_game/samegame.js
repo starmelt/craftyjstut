@@ -66,12 +66,6 @@ window.onload = (function() {
             this.h = BOX_HEIGHT * BOARD_ROWS;
             this.color("#888");
             this._setupBoard(BOARD_LEFT, BOARD_TOP, BOARD_ROWS, BOARD_COLS, BOX_WIDTH, BOX_HEIGHT);
-
-            this.bind("enterframe", function(e) {
-                if (this._board._dirty === true) {
-                    this._board._dirty = false;
-                }
-            });
         },
         /**
          * Set up the board.
@@ -174,18 +168,15 @@ window.onload = (function() {
             function flagInternal(aPosList, board) {
                 if (aPosList.length === 0) return;
                 var head = aPosList[0], tail = aPosList.slice(1);
-                var currentBox = board[head.x][head.y];
-                if (currentBox && !currentBox._flagged && currentBox._color === color) {
-                    currentBox._flagged = true;
-                    board._dirty = true;
-                    if (head.y > 0) 
+                if (board[head.x]) {
+                    var currentBox = board[head.x][head.y];
+                    if (currentBox && !currentBox._flagged && currentBox._color === color) {
+                        currentBox._flagged = true;
                         tail.push({ x: head.x, y: head.y - 1 });
-                    if (head.y < (board[head.x].length - 1)) 
                         tail.push({ x: head.x, y: head.y + 1 });
-                    if (head.x > 0) 
                         tail.push({ x: head.x - 1, y: head.y});
-                    if (head.x < (board.length - 1)) 
                         tail.push({ x: head.x + 1, y: head.y});
+                    }
                 }
                 flagInternal(tail, board);
             };
