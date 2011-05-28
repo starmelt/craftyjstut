@@ -1,3 +1,9 @@
+/* 
+ * This is basically the same example as before, but the Box draws itself on the Canvas
+ * instead of using a Bitmap Image.
+ * Only the differences will be documented here. Please look at the previous example for 
+ * more detailed explanations.
+ */
 window.onload = (function() {
     var WIDTH = 800,
         HEIGHT = 640;
@@ -12,7 +18,13 @@ window.onload = (function() {
             this.h = 32;
             this.fourway(10);
             
+            /*
+             * Define an event handler for the 'draw' event.
+             * This is where we hook in our custom _draw() method.
+             * The 'draw' event is triggered after the 'enterframe' event.
+             */
             this.bind("draw", function(obj) {
+                // Pass the Canvas context and the drawing region.
                 this._draw(obj.ctx, obj.pos);
             });
             this.bind("enterframe", function(e) {
@@ -25,6 +37,16 @@ window.onload = (function() {
                 this.tween({alpha: 0.0}, 50);
             });
         },
+        /*
+         * This is the method that gets called on 'draw' events.
+         * It draws a Box on the Canvas context.
+         *
+         * Theoretically the method can draw anywhere on the Canvas context, but it
+         * should only draw in the drawing region that is passed with the 'draw' event.
+         *
+         * @param ctx The Canvas context
+         * @param po The drawing region
+         */
         _draw: function(ctx, po) {
             var pos = {_x: po._x + 1, _y: po._y + 1, _w: po._w - 2, _h: po._h -2};
             
