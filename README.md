@@ -1,14 +1,20 @@
-# README
+# Welcome to starmelt's Crafty Tutorials!
 
-## Header
+CraftyJS is a nice litte JavaScript Game Engine, you can get at http://craftyjs.com.
 
-This is just a test.
+The Tutorials are in the github Wiki: https://github.com/starmelt/craftyjstut/wiki.
 
-I have never used Markdown before. So here we go...
+There is also some documented Source Code for you to get started with CraftyJS.
+- Go to the 'firststeps' directory for the basics.
+- In 'samegame' you will find an (almost) complete puzzle game. In case you don't know that game, there is a Wikipedia entry for it: http://en.wikipedia.org/wiki/SameGame.
 
-- one
-- two
+The examples have been tested in Chrome 11 and Firefox 4.0.1. Firefox shows cryptic internal error messages of its JavaScript Engine in some cases, but everything still seems to work. My recommendation is Google Chrome, though.
 
-1. one
-2. two
-3. three
+So it might be worth coming back later. :)
+
+
+Now, have fun!
+Let me know what you think about these tutorials, all feedback is welcome!
+
+Thanks,
+starmelt
