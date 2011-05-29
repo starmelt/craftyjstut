@@ -17,7 +17,7 @@ window.onload = (function() {
     /*
      * Loads the Sprite PNG and create the only sprite 'crate' from it
      */
-    Crafty.sprite(32, "../../img/crate.png", { crate: [0, 0]});
+    Crafty.sprite(32, "../img/crate.png", { crate: [0, 0]});
 
     /**
      * The 'Box' component.
