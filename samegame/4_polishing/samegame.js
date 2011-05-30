@@ -7,7 +7,8 @@ window.onload = (function() {
         BOARD_LEFT = 160,
         BOARD_ROWS = 10,
         BOARD_COLS = 16,
-        TWEEN_FRAMES = 15;
+        TWEEN_FRAMES = 15,
+        FONT = "24px sans-serif";
 
     var score = 0;
 
@@ -18,6 +19,66 @@ window.onload = (function() {
      * Loads the Sprite PNG and create the only sprite 'crate' from it
      */
     Crafty.sprite(32, "../../img/crate.png", { crate: [0, 0]});
+
+    /**@
+     * A Component that draws Text on a Canvas.
+     */
+    Crafty.c("CanvasText", {
+        /* Setting ready = true is necessary! It will not be drawn at all otherwise! */
+        ready: true,
+        /*
+         * CanvasText depends on 2D and Canvas, so add them here in `init`.
+         * Also add a handler for the 'draw' element which does the actual drawing 
+         * of the Text.
+         */
+        init: function() {
+            this.addComponent("2D, Canvas");
+
+            this.bind("draw", function(obj) {
+                var ctx = obj.ctx;
+                var tx = this.x;
+                if (this._align === "right") tx += this.w;
+                if (this._align === "center") tx += this.w / 2;
+                ctx.save();
+                ctx.font = this._font;
+                ctx.fillStyle = "#000";
+                ctx.translate(tx, this.y + this.h);
+                ctx.textAlign = this._align;
+                ctx.textBaseline = "bottom";
+                ctx.fillText(this._text, 0, 0);
+                ctx.restore();
+                ctx.stroke();
+            });
+        },
+        /**@
+         * Sets the Text.
+         * @param text the Text
+         */
+        text: function(text) {
+            if(text === null || text === undefined) return this._text;
+            this._text = text;
+            this.trigger("change");
+            return this;
+        },
+        /**@
+         * Sets the Font.
+         * @param font the Font
+         */
+        font: function(font) {
+            this._font = font;
+            this.trigger("change");
+            return this;
+        },
+        /**@
+         * Sets the Alignment.
+         * @param align the Alignment (left, right, center). Default is left.
+         */
+        align: function(align) {
+            this._align = align;
+            this.trigger("change");
+            return this;
+        }
+    });
 
     /**
      * The 'Box' component.
@@ -56,9 +117,12 @@ window.onload = (function() {
         }
     });
 
+    /** 
+     * The Game 'Board' Component that includes the game logic.
+     */
     Crafty.c("Board", {
         /* The list of colors used for the game */
-        COLORS: ["#F00", "#0F0", "#FF0", "#F0F", "#0FF"],
+        COLORS: ["#F00", "#0F0", "#FF0", "#F0F"],
         /**
          * Initialisation. Adds components, sets positions, creates the board
          */
@@ -72,12 +136,16 @@ window.onload = (function() {
             this._setupBoard(BOARD_LEFT, BOARD_TOP, BOARD_ROWS, BOARD_COLS, BOX_WIDTH, BOX_HEIGHT);
 
             score = 0;
-            this.scoreLabel = Crafty.e("2D, DOM, Text")
-                                .attr({x: BOARD_LEFT, y: BOARD_TOP - 30, w: 50, h: 30}).text("Score: ");
-            this.scoreEnt = Crafty.e("2D, DOM, Text")
-                                .attr({x: BOARD_LEFT + 50, y: BOARD_TOP - 30, w: 100, h: 30});
+            this.scoreLabel = Crafty.e("CanvasText")
+                                .attr({x: BOARD_LEFT, y: BOARD_TOP - 30, w: 100, h: 30})
+                                .font(FONT)
+                                .text("Score: ");
+            this.scoreEnt = Crafty.e("CanvasText")
+                                .attr({x: BOARD_LEFT + 100, y: BOARD_TOP - 30, w: 60, h: 30})
+                                .font(FONT)
+                                .align("right");
             this.bind("enterframe", function(obj) {
-                this.scoreEnt.text(""+score);
+                this.scoreEnt.text(score);
             });
         },
         /**
@@ -88,7 +156,7 @@ window.onload = (function() {
             this._board = _.range(cols).map(function(c) {
                 return _.range(rows).map(function(r) {
                     var pos = this._computeBoxPos(x, y, c, r, BOX_WIDTH, BOX_HEIGHT);
-                    var color = this.COLORS[Crafty.randRange(0, 4)];
+                    var color = this.COLORS[Crafty.randRange(0, this.COLORS.length - 1)];
                     return Crafty.e("Box").makeBox(pos.x, pos.y, color, _.bind(this._clickHandler, this));
                 }, this);
                 return column;
@@ -192,44 +260,49 @@ window.onload = (function() {
         }
     });
     
+    /*
+     * We are using two Scenes:
+     *  - the first one is the Game itself and is displayed when loading the page
+     *  - the second one is the 'Play Again?' Scene, that shows the score and
+     *    restarts the game on mouse click
+     */
     Crafty.scene("Game", function() {
-
-        // Create the board
         Crafty.e("Board");
     });
 
+    /*
+     * The PlayAgain scene looks pretty ugly, sorry. :)
+     */
     Crafty.scene("PlayAgain", function() {
         var width = BOARD_COLS * BOX_WIDTH,
-            height = BOARD_ROWS * BOX_HEIGHT
+            height = BOARD_ROWS * BOX_HEIGHT,
+            vcenter = BOARD_TOP + height / 2,
             bg = Crafty.e("2D, Canvas, Color, Mouse")
                 .attr({x: BOARD_LEFT, y: BOARD_TOP, w: width, h: height})
                 .color("#F7941E");
-        
-        bg.bind("draw", function(obj) {
-            function drawTextCentered(ctx, text, y) {
-                ctx.save();
-                ctx.font = "20pt Helvetica";
-                ctx.fillStyle = "#000";
-                ctx.strokeStyle = "#f00";
-                ctx.translate(BOARD_LEFT + width / 2, y);
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(text, 0, 0);
-                ctx.restore();
-                ctx.stroke();
-            }
-            var ctx = obj.ctx;
-            var vcenter = BOARD_TOP + height / 2;
-            drawTextCentered(ctx, "Your Score is", vcenter - 50); 
-            drawTextCentered(ctx, "" + score, vcenter);
-            drawTextCentered(ctx, "Click to Play Again!", vcenter + 80);
-        });
 
+        Crafty.e("CanvasText")
+                        .attr({x: BOARD_LEFT, y: vcenter - 70, w: width, h: 30})
+                        .font(FONT)
+                        .align("center")
+                        .text("Your Score is");
+        Crafty.e("CanvasText")
+                        .attr({x: BOARD_LEFT, y: vcenter, w: width, h: 30})
+                        .font(FONT)
+                        .align("center")
+                        .text(score);
+        Crafty.e("CanvasText")
+                        .attr({x: BOARD_LEFT, y: vcenter + 80, w: width, h: 30})
+                        .font(FONT)
+                        .align("center")
+                        .text("Click to Play Again!");
+     
         bg.bind("click", function() {
             Crafty.scene("Game");
         });
     });
 
+    // start with the Game scene
     Crafty.scene("Game");
 });
 
