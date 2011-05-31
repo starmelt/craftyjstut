@@ -159,7 +159,6 @@ window.onload = (function() {
                     var color = this.COLORS[Crafty.randRange(0, this.COLORS.length - 1)];
                     return Crafty.e("Box").makeBox(pos.x, pos.y, color, _.bind(this._clickHandler, this));
                 }, this);
-                return column;
             }, this);
         },
         /**
@@ -175,7 +174,7 @@ window.onload = (function() {
             return {
                 x: x + col * bh,
                 y: y + (bh * BOARD_ROWS - (row + 1) * bh)
-            }
+            };
         },
         /**
          * The callback click handler that is passed to the boxes
@@ -215,14 +214,14 @@ window.onload = (function() {
          * Remove flagged boxes from the columns and empty columns from the board
          */
         _purgeColumns: function() {
-            var filter = function(el) { return !el._flagged };
+            var filter = function(el) { return !el._flagged; };
 
             var count =_(this._board).chain().flatten().reject(filter).value().length;
             score += (count === 1) ? -1000 : (count * count * 10);
             
             _(this._board).each(function(column, c) {
                 _(column).chain().reject(filter, this).each(function (el) { 
-                    el.destroy() 
+                    el.destroy();
                 }, this);
             }, this);
 
@@ -255,7 +254,7 @@ window.onload = (function() {
                     }
                 }
                 flagInternal(tail, board);
-            };
+            }
             flagInternal([aPos], this._board);
         }
     });
