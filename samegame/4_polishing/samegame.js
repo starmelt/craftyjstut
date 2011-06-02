@@ -24,11 +24,12 @@ window.onload = (function() {
      * A Component that draws Text on a Canvas.
      */
     Crafty.c("CanvasText", {
+        _align: "left",
         /* Setting ready = true is necessary! It will not be drawn at all otherwise! */
         ready: true,
         /*
          * CanvasText depends on 2D and Canvas, so add them here in `init`.
-         * Also add a handler for the 'draw' element which does the actual drawing 
+         * Also add a handler for the 'draw' element which does the actual drawing
          * of the Text.
          */
         init: function() {
@@ -91,14 +92,14 @@ window.onload = (function() {
          */
         init: function() {
             this.addComponent("2D, Canvas, Color, Mouse, Tween, crate");
-            
+
             this.w = BOX_WIDTH;
             this.h = BOX_HEIGHT;
 
             this.bind("click", function(obj) {
                 if (this._onClickCallback) this._onClickCallback({
-                    x: obj.realX, 
-                    y: obj.realY, 
+                    x: obj.realX,
+                    y: obj.realY,
                     color: this._color
                 });
             });
@@ -117,7 +118,7 @@ window.onload = (function() {
         }
     });
 
-    /** 
+    /**
      * The Game 'Board' Component that includes the game logic.
      */
     Crafty.c("Board", {
@@ -219,10 +220,10 @@ window.onload = (function() {
 
             var count =_(this._board).chain().flatten().reject(filter).value().length;
             score += (count === 1) ? -1000 : (count * count * 10);
-            
+
             _(this._board).each(function(column, c) {
-                _(column).chain().reject(filter, this).each(function (el) { 
-                    el.destroy() 
+                _(column).chain().reject(filter, this).each(function (el) {
+                    el.destroy()
                 }, this);
             }, this);
 
@@ -259,7 +260,7 @@ window.onload = (function() {
             flagInternal([aPos], this._board);
         }
     });
-    
+
     /*
      * We are using two Scenes:
      *  - the first one is the Game itself and is displayed when loading the page
@@ -296,7 +297,7 @@ window.onload = (function() {
                         .font(FONT)
                         .align("center")
                         .text("Click to Play Again!");
-     
+
         bg.bind("click", function() {
             Crafty.scene("Game");
         });
@@ -305,4 +306,3 @@ window.onload = (function() {
     // start with the Game scene
     Crafty.scene("Game");
 });
-
