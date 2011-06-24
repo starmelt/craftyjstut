@@ -8,7 +8,6 @@ window.onload = (function() {
         BOARD_ROWS = 10,
         BOARD_COLS = 16;
     Crafty.init(WIDTH, HEIGHT);
-    Crafty.canvas();
 
     /*
      * Loads the Sprite PNG and create the only sprite 'crate' from it
@@ -26,14 +25,14 @@ window.onload = (function() {
          */
         init: function() {
             this.addComponent("2D, Canvas, Color, Mouse, crate");
-            
+
             this.w = BOX_WIDTH;
             this.h = BOX_HEIGHT;
 
-            this.bind("click", function(obj) {
+            this.bind("Click", function(obj) {
                 if (this._onClickCallback) this._onClickCallback({
-                    x: obj.realX, 
-                    y: obj.realY, 
+                    x: obj.realX,
+                    y: obj.realY,
                     color: this._color
                 });
             });
@@ -106,8 +105,7 @@ window.onload = (function() {
             };
         }
     });
-    
+
     // Create the board
     Crafty.e("Board");
 });
-

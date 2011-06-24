@@ -13,7 +13,6 @@ window.onload = (function() {
     var score = 0;
 
     Crafty.init(WIDTH, HEIGHT);
-    Crafty.canvas();
 
     /*
      * Loads the Sprite PNG and create the only sprite 'crate' from it
@@ -35,7 +34,7 @@ window.onload = (function() {
         init: function() {
             this.addComponent("2D, Canvas");
 
-            this.bind("draw", function(obj) {
+            this.bind("Draw", function(obj) {
                 var ctx = obj.ctx;
                 var tx = this.x;
                 if (this._align === "right") tx += this.w;
@@ -58,7 +57,7 @@ window.onload = (function() {
         text: function(text) {
             if(text === null || text === undefined) return this._text;
             this._text = text;
-            this.trigger("change");
+            this.trigger("Change");
             return this;
         },
         /**@
@@ -67,7 +66,7 @@ window.onload = (function() {
          */
         font: function(font) {
             this._font = font;
-            this.trigger("change");
+            this.trigger("Change");
             return this;
         },
         /**@
@@ -76,7 +75,7 @@ window.onload = (function() {
          */
         align: function(align) {
             this._align = align;
-            this.trigger("change");
+            this.trigger("Change");
             return this;
         }
     });
@@ -96,7 +95,7 @@ window.onload = (function() {
             this.w = BOX_WIDTH;
             this.h = BOX_HEIGHT;
 
-            this.bind("click", function(obj) {
+            this.bind("Click", function(obj) {
                 if (this._onClickCallback) this._onClickCallback({
                     x: obj.realX,
                     y: obj.realY,
@@ -145,7 +144,7 @@ window.onload = (function() {
                                 .attr({x: BOARD_LEFT + 100, y: BOARD_TOP - 30, w: 60, h: 30})
                                 .font(FONT)
                                 .align("right");
-            this.bind("enterframe", function(obj) {
+            this.bind("EnterFrame", function(obj) {
                 this.scoreEnt.text(score);
             });
         },
@@ -297,7 +296,7 @@ window.onload = (function() {
                         .align("center")
                         .text("Click to Play Again!");
 
-        bg.bind("click", function() {
+        bg.bind("Click", function() {
             Crafty.scene("Game");
         });
     });
