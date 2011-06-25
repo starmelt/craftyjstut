@@ -46,8 +46,8 @@ window.onload = (function() {
                 ctx.textAlign = this._align;
                 ctx.textBaseline = "bottom";
                 ctx.fillText(this._text, 0, 0);
-                ctx.restore();
                 ctx.stroke();
+                ctx.restore();
             });
         },
         /**@
@@ -145,7 +145,7 @@ window.onload = (function() {
                                 .font(FONT)
                                 .align("right");
             this.bind("EnterFrame", function(obj) {
-                this.scoreEnt.text(score);
+                if (this.scoreEnt.text() != score) this.scoreEnt.text(score);
             });
         },
         /**
