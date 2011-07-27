@@ -12,19 +12,22 @@ Crafty.c("SpriteText", {
         this.bind("EnterFrame", function(obj) {
             var txt = this._text.split(""), // String to Array
                 tileSize = this._registeredSpriteFonts[this._font],
-                l, pos, type, e, ch;
+                l, pos, type, e, chExists, ch;
             if (tileSize && this._oldText !== this._text) {
                 this._oldText = this._text;
+                // destory entities from previous rendering
                 for (i in this._entities) {
                     this._entities[i].destroy();
                 }
                 this._entities = [];
+                // create new entities
                 for (i in txt) {
                     l = txt[i];
                     posx = this.x + i * tileSize;
                     type = obj.type === "DOM" ? "DOM" : "Canvas";
-                    ch = Crafty.e(this.charName(this._font, l))._image ? l : l.toUpperCase();
-                    e = Crafty.e("2D, " + type + ", " + this.charName(this._font, ch))
+                    chExists = this.charName(this._font, l) in Crafty.components(); // check if letter exists in Sprite
+                    ch = chExists ? l : l.toUpperCase(); // if letter does not exist, try uppercase
+                    e = Crafty.e("2D, " + type + ", " + this.charName(this._font, ch)) // create entity for the letter
                             .attr({x: posx, y: this.y, w: tileSize, h: tileSize});
                     this._entities.push(e);
                 }
