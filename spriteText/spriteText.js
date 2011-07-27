@@ -1,20 +1,14 @@
-window.onload = (function() {
-    var WIDTH = 800,
-        HEIGHT = 640;
-    // Initialize Crafty
-    Crafty.init(WIDTH, HEIGHT);
+
 
     /**@
      * A Component that draws Text on a Canvas.
      */
     Crafty.c("SpriteText", {
-        _registeredSpriteFonts: {},
         _defaultMapping: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_´" +
                             "abcdefghijklmnopqrstuvwxyz{|}~", // ASCII Characters 32-126
-        _entities: [],
-        _oldText: "",
                             
         init: function() {
+            this._registeredSpriteFonts = {};
             this.bind("EnterFrame", function(obj) {
                 var txt = this._text.split(""), // String to Array
                     tileSize = this._registeredSpriteFonts[this._font],
@@ -24,13 +18,14 @@ window.onload = (function() {
                     for (i in this._entities) {
                         this._entities[i].destroy();
                     }
+                    this._entities = [];
                     for (i in txt) {
                         l = txt[i];
-                        pos = {x: this.x + i * tileSize, y: this.y};
+                        posx = this.x + i * tileSize;
                         type = obj.type === "DOM" ? "DOM" : "Canvas";
                         ch = Crafty.e(this.charName(this._font, l))._image ? l : l.toUpperCase();
                         e = Crafty.e("2D, " + type + ", " + this.charName(this._font, ch))
-                                .attr({x: pos.x, y: pos.y, w: tileSize, h: tileSize});
+                                .attr({x: posx, y: this.y, w: tileSize, h: tileSize});
                         this._entities.push(e);
                     }
                 }
@@ -79,22 +74,4 @@ window.onload = (function() {
         }
         
     });
-    
-    var text = Crafty.e("2D, Canvas, Mouse, SpriteText")
-                .attr({x: 160, y: 96, w: 19*16, h: 16})
-                .registerFont("BlueBubble", 16, "../img/BlueBubbleFont.png")
-                .text("Hello World (Canvas)!");
-                
-    text.bind("Click", function (e) {
-        text.text("clicked!");
-    });
-        /*
-    var text2 = Crafty.e("2D, DOM, Mouse, SpriteText")
-                .attr({x: 160, y: 196, w: 16*16, h: 16})
-                .registerFont("BlueBubble", 16, "../img/BlueBubbleFont.png")
-                .text("Hello World (DOM)!");
-                
-    text2.bind("Click", function (e) {
-        text2.text("clicked!");
-    });*/
-});
+
