@@ -10,20 +10,24 @@ Crafty.c("SpriteText", {
     
     init: function() {
         this.bind("EnterFrame", function(obj) {
-            var txt = this._text.split(""), // String to Array
-                tileSize = this._registeredSpriteFonts[this._font],
-                l, pos, type, e, chExists, ch;
-            if (tileSize && this._oldText !== this._text) {
-                this._oldText = this._text;
+            var tileSize = this._registeredSpriteFonts[this._font],
+                txt, l, pos, type, e, chExists, ch, startx, textwidth;
+            if (tileSize && this._changed) {
+                txt = this._text.split(""); // String to Array
                 // destory entities from previous rendering
                 for (i in this._entities) {
                     this._entities[i].destroy();
                 }
                 this._entities = [];
+                
                 // create new entities
+                startx = 0;
+                textwidth = this._text.length * tileSize;
+                if (this._align === "center") startx = (this.w - textwidth) / 2;
+                if (this._align === "right") startx = (this.w - textwidth);
                 for (i in txt) {
                     l = txt[i];
-                    posx = this.x + i * tileSize;
+                    posx = startx + i * tileSize;
                     type = obj.type === "DOM" ? "DOM" : "Canvas";
                     chExists = this.charName(this._font, l) in Crafty.components(); // check if letter exists in Sprite
                     ch = chExists ? l : l.toUpperCase(); // if letter does not exist, try uppercase
@@ -37,9 +41,10 @@ Crafty.c("SpriteText", {
     /**@
      * Sets the Text.
      * @param text the Text
+     * @return entity, if parameter was passed, current value otherwise
      */
     text: function(text) {
-        if(text === null || text === undefined) return this._text;
+        if(text === undefined) return this._text;
         this._text = text;
         this.trigger("Change");
         return this;
@@ -47,9 +52,22 @@ Crafty.c("SpriteText", {
     /**@
      * Sets the Font.
      * @param font the Font
+     * @return entity, if parameter was passed, current value otherwise
      */
     font: function(font) {
+        if(font === undefined) return this._font;
         this._font = font;
+        this.trigger("Change");
+        return this;
+    },
+    /**@
+     * Sets the Alignment (left, center, right)
+     * @param align the Alignment
+     * @return entity, if parameter was passed, current value otherwise
+     */
+    align: function(align) {
+        if(align === undefined) return this._align;
+        this._align = align;
         this.trigger("Change");
         return this;
     },
