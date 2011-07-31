@@ -1,3 +1,11 @@
+/*!
+* SpriteText Component for CraftyJS
+* https://github.com/starmelt/craftyjstut
+*
+* Copyright 2011 by starmelt. 
+* Dual licensed under the MIT or GPL Version 2 licenses.
+*/
+
 /**@
  * #SpriteText
  * @category Graphics
