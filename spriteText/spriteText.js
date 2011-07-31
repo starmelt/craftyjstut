@@ -29,10 +29,10 @@ Crafty.c("SpriteText", {
                 this._entities = [];
                 
                 // create new entities
-                startx = 0;
+                startx = this.x;
                 textwidth = this._text.length * tileSize;
-                if (this._align === "center") startx = (this.w - textwidth) / 2;
-                if (this._align === "right") startx = (this.w - textwidth);
+                if (this._align === "center") startx += (this.w - textwidth) / 2;
+                if (this._align === "right") startx += (this.w - textwidth);
                 for (i in txt) {
                     l = txt[i];
                     posx = startx + i * tileSize;
@@ -53,8 +53,10 @@ Crafty.c("SpriteText", {
      */
     text: function(text) {
         if(text === undefined) return this._text;
-        this._text = text;
-        this.trigger("Change");
+        if (this._text != text) {
+            this._text = "" + text;
+            this.trigger("Change");
+        }
         return this;
     },
     /**@
@@ -64,8 +66,10 @@ Crafty.c("SpriteText", {
      */
     font: function(font) {
         if(font === undefined) return this._font;
-        this._font = font;
-        this.trigger("Change");
+        if (this._font != font) {
+            this._font = font;
+            this.trigger("Change");
+        }
         return this;
     },
     /**@
@@ -75,8 +79,10 @@ Crafty.c("SpriteText", {
      */
     align: function(align) {
         if(align === undefined) return this._align;
-        this._align = align;
-        this.trigger("Change");
+        if (this._align != align) {
+            this._align = align;
+            this.trigger("Change");
+        }
         return this;
     },
     /**@
