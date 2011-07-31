@@ -249,7 +249,7 @@ window.onload = (function() {
 
     // Load assets, then start Game
     Crafty.scene("Loading", function() {
-        Crafty.load(["../../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png"], function() {
+        Crafty.load(["../../img/crate.png", "../../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png"], function() {
             Crafty.scene("Game");
         });
     });
