@@ -14,7 +14,7 @@ Crafty.c("SpriteText", {
                 txt, l, pos, type, e, chExists, ch, startx, textwidth;
             if (tileSize && this._changed) {
                 txt = this._text.split(""); // String to Array
-                // destory entities from previous rendering
+                // destroy entities from previous rendering
                 for (i in this._entities) {
                     this._entities[i].destroy();
                 }

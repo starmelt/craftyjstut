@@ -4,7 +4,8 @@ window.onload = (function() {
     // Initialize Crafty
     Crafty.init(WIDTH, HEIGHT);
     
-    Crafty.load(["../img/BlueBubbleFont.png", "../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png"], // preload images
+    Crafty.load(["../img/BlueBubbleFont.png", "../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png",
+                 "../img/TSK06.png"], // preload images
         function() {
             // Write some Text (Canvas) using the BlueBubble Font (16x16)
             var txt1 = "BlueBubble!";
@@ -33,11 +34,10 @@ window.onload = (function() {
             text2.addComponent("Mouse");
             text2.bind("Click", function (e) {
                 text2.align(text2.align() === "right" ? "left" : "right");
-                //text2.font("BlueBubble");
             });
                 
             // Write some Text (DOM) using the SyntaxTerror Font (32x32)
-            var txt3 = "SyntaxTerror again (DOM)!";
+            var txt3 = "SyntaxTerror (DOM)!";
             var ts3 = 32;
             var text3 = Crafty.e("2D, DOM, SpriteText")
                         .attr({x: 0, y: 200, w: txt3.length*ts3, h: ts3})
@@ -47,10 +47,22 @@ window.onload = (function() {
             // Add the Mouse Component and change text and font on Click
             text3.addComponent("Mouse");
             text3.bind("Click", function (e) {
-                text3.font("BlueBubble");
-                text3.text("Clicked and Font changed!");
+                text3.text("This is a drum!");
             });
             
+            // Write some Text (DOM) using the SyntaxTerror Font (32x32)
+            var txt4 = "Hello World!";
+            var ts4 = 32;
+            var text4 = Crafty.e("2D, DOM, SpriteText")
+                        .attr({x: 0, y: 300, w: txt4.length*ts4, h: ts4})
+                        .registerFont("TSK06", ts2, "../img/TSK06.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ!.\"-")
+                        .text(txt4);
+                        
+            // Add the Mouse Component and change text and font on Click
+            text4.addComponent("Mouse");
+            text4.bind("Click", function (e) {
+                text4.text("WTF No SPACE char mapped!");
+            });
         }
     );
 });
