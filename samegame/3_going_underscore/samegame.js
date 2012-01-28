@@ -91,7 +91,7 @@ window.onload = (function() {
          */
         _computeBoxPos: function(x, y, col, row, bw, bh) {
             return {
-                x: x + col * bh,
+                x: x + col * bw,
                 y: y + (bh * BOARD_ROWS - (row + 1) * bh)
             }
         },

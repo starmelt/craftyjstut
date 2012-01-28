@@ -76,8 +76,8 @@ window.onload = (function() {
                 this._board[c] = [];
                 for (var r = 0; r < rows; r++) {
                     var that = this;
-                    var newBox = Crafty.e("Box").makeBox(x + c * BOX_HEIGHT
-                                        , y + (BOX_HEIGHT * BOARD_ROWS - (r + 1) * BOX_WIDTH)
+                    var newBox = Crafty.e("Box").makeBox(x + c * BOX_WIDTH
+                                        , y + (BOX_HEIGHT * BOARD_ROWS - (r + 1) * BOX_HEIGHT)
                                         , this.COLORS[Crafty.randRange(0, 4)]
                                         , function () {
                                             // bind to 'this' context!
