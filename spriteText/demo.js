@@ -55,7 +55,7 @@ window.onload = (function() {
             var ts4 = 32;
             var text4 = Crafty.e("2D, DOM, SpriteText")
                         .attr({x: 0, y: 300, w: txt4.length*ts4, h: ts4})
-                        .registerFont("TSK06", ts2, "../img/TSK06.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ!.\"-")
+                        .registerFont("TSK06", ts4, "../img/TSK06.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ!.\"-")
                         .text(txt4);
                         
             // Add the Mouse Component and change text and font on Click

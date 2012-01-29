@@ -78,7 +78,7 @@ window.onload = (function() {
                     var that = this;
                     var newBox = Crafty.e("Box").makeBox(x + c * BOX_WIDTH
                                         , y + (BOX_HEIGHT * BOARD_ROWS - (r + 1) * BOX_HEIGHT)
-                                        , this.COLORS[Crafty.randRange(0, 4)]
+                                        , this.COLORS[Crafty.math.randomInt(0, 4)]
                                         , function () {
                                             // bind to 'this' context!
                                             that._clickHandler.apply(that, arguments);
