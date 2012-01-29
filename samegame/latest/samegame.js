@@ -8,78 +8,17 @@ window.onload = (function() {
         BOARD_ROWS = 10,
         BOARD_COLS = 16,
         TWEEN_FRAMES = 15,
-        FONT = "24px sans-serif";
+        FONT = "SyntaxError";
 
     var score = 0;
 
-    Crafty.init(WIDTH, HEIGHT);
-    Crafty.canvas();
+    Crafty.init(WIDTH, HEIGHT, 30);
 
     /*
      * Loads the Sprite PNG and create the only sprite 'crate' from it
      */
     Crafty.sprite(32, "../../img/crate.png", { crate: [0, 0]});
 
-    /**@
-     * A Component that draws Text on a Canvas.
-     */
-    Crafty.c("CanvasText", {
-        _align: "left",
-        /* Setting ready = true is necessary! It will not be drawn at all otherwise! */
-        ready: true,
-        /*
-         * CanvasText depends on 2D and Canvas, so add them here in `init`.
-         * Also add a handler for the 'draw' element which does the actual drawing
-         * of the Text.
-         */
-        init: function() {
-            this.addComponent("2D, Canvas");
-
-            this.bind("draw", function(obj) {
-                var ctx = obj.ctx;
-                var tx = this.x;
-                if (this._align === "right") tx += this.w;
-                if (this._align === "center") tx += this.w / 2;
-                ctx.save();
-                ctx.font = this._font;
-                ctx.fillStyle = "#000";
-                ctx.translate(tx, this.y + this.h);
-                ctx.textAlign = this._align;
-                ctx.textBaseline = "bottom";
-                ctx.fillText(this._text, 0, 0);
-                ctx.restore();
-                ctx.stroke();
-            });
-        },
-        /**@
-         * Sets the Text.
-         * @param text the Text
-         */
-        text: function(text) {
-            if(text === null || text === undefined) return this._text;
-            this._text = text;
-            this.trigger("change");
-            return this;
-        },
-        /**@
-         * Sets the Font.
-         * @param font the Font
-         */
-        font: function(font) {
-            this._font = font;
-            this.trigger("change");
-            return this;
-        },
-        /**@
-         * Sets the Alignment.
-         * @param align the Alignment (left, right, center). Default is left.
-         */
-        align: function(align) {
-            this._align = align;
-            this.trigger("change");
-            return this;
-        }
-    });
 
     /**
      * The 'Box' component.
@@ -96,7 +35,7 @@ window.onload = (function() {
             this.w = BOX_WIDTH;
             this.h = BOX_HEIGHT;
 
-            this.bind("click", function(obj) {
+            this.bind("Click", function(obj) {
                 if (this._onClickCallback) this._onClickCallback({
                     x: obj.realX,
                     y: obj.realY,
@@ -133,21 +72,21 @@ window.onload = (function() {
             this.y = BOARD_TOP;
             this.w = BOX_WIDTH * BOARD_COLS;
             this.h = BOX_HEIGHT * BOARD_ROWS;
-            this.color("#888");
+            this.color("#000");
             this._setupBoard(BOARD_LEFT, BOARD_TOP, BOARD_ROWS, BOARD_COLS, BOX_WIDTH, BOX_HEIGHT);
 
             score = 0;
-            this.scoreLabel = Crafty.e("CanvasText")
-                                .attr({x: BOARD_LEFT, y: BOARD_TOP - 30, w: 100, h: 30})
-                                .font(FONT)
+            this.scoreLabel = Crafty.e("2D, Canvas, SpriteText")
+                                .attr({x: BOARD_LEFT, y: BOARD_TOP - 30, w: 32 * 6, h: 32})
+                                .registerFont(FONT, 32, "../../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png")
                                 .text("Score: ");
-            this.scoreEnt = Crafty.e("CanvasText")
-                                .attr({x: BOARD_LEFT + 100, y: BOARD_TOP - 30, w: 60, h: 30})
+            this.scoreEnt = Crafty.e("2D, Canvas, Color, SpriteText")
+                                .attr({x: BOARD_LEFT + this.scoreLabel.w, y: BOARD_TOP - 30,
+                                       w: this.w - this.scoreLabel.w, h: 32})
                                 .font(FONT)
-                                .align("right");
-            this.bind("enterframe", function(obj) {
-                this.scoreEnt.text(score);
-            });
+                                .align("right")
+                                .color("#000")
+                                .text(score);
         },
         /**
          * Set up the board.
@@ -157,7 +96,7 @@ window.onload = (function() {
             this._board = _.range(cols).map(function(c) {
                 return _.range(rows).map(function(r) {
                     var pos = this._computeBoxPos(x, y, c, r, BOX_WIDTH, BOX_HEIGHT);
-                    var color = this.COLORS[Crafty.randRange(0, this.COLORS.length - 1)];
+                    var color = this.COLORS[Crafty.math.randomInt(0, this.COLORS.length - 1)];
                     return Crafty.e("Box").makeBox(pos.x, pos.y, color, _.bind(this._clickHandler, this));
                 }, this);
             }, this);
@@ -173,7 +112,7 @@ window.onload = (function() {
          */
         _computeBoxPos: function(x, y, col, row, bw, bh) {
             return {
-                x: x + col * bh,
+                x: x + col * bw,
                 y: y + (bh * BOARD_ROWS - (row + 1) * bh)
             };
         },
@@ -187,6 +126,7 @@ window.onload = (function() {
                 this._flagConnectedBoxes(aPos, obj.color);
                 this._purgeColumns();
                 this._moveBoxesToNewPositions();
+                this.scoreEnt.text(score);
             }
         },
         /**
@@ -219,7 +159,7 @@ window.onload = (function() {
 
             var count =_(this._board).chain().flatten().reject(filter).value().length;
             score += (count === 1) ? -1000 : (count * count * 10);
-
+            
             _(this._board).each(function(column, c) {
                 _(column).chain().reject(filter, this).each(function (el) {
                     el.destroy()
@@ -279,29 +219,42 @@ window.onload = (function() {
             vcenter = BOARD_TOP + height / 2,
             bg = Crafty.e("2D, Canvas, Color, Mouse")
                 .attr({x: BOARD_LEFT, y: BOARD_TOP, w: width, h: height})
-                .color("#F7941E");
+                .color("#000");
 
-        Crafty.e("CanvasText")
-                        .attr({x: BOARD_LEFT, y: vcenter - 70, w: width, h: 30})
-                        .font(FONT)
+        Crafty.e("2D, Canvas, SpriteText")
+                        .attr({x: BOARD_LEFT, y: vcenter - 90, w: width, h: 32})
+                        .registerFont(FONT, 32, "../../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png")
                         .align("center")
                         .text("Your Score is");
-        Crafty.e("CanvasText")
-                        .attr({x: BOARD_LEFT, y: vcenter, w: width, h: 30})
+        Crafty.e("2D, Canvas, SpriteText")
+                        .attr({x: BOARD_LEFT, y: vcenter - 25, w: width, h: 32})
                         .font(FONT)
                         .align("center")
                         .text(score);
-        Crafty.e("CanvasText")
-                        .attr({x: BOARD_LEFT, y: vcenter + 80, w: width, h: 30})
+        Crafty.e("2D, Canvas, SpriteText")
+                        .attr({x: BOARD_LEFT, y: vcenter + 40, w: width, h: 32})
                         .font(FONT)
                         .align("center")
-                        .text("Click to Play Again!");
+                        .text("Click");
+        Crafty.e("2D, Canvas, SpriteText")
+                        .attr({x: BOARD_LEFT, y: vcenter + 80, w: width, h: 32})
+                        .font(FONT)
+                        .align("center")
+                        .text("to Play Again!");
 
-        bg.bind("click", function() {
+        bg.bind("Click", function() {
             Crafty.scene("Game");
         });
     });
 
-    // start with the Game scene
-    Crafty.scene("Game");
+    // Load assets, then start Game
+    Crafty.scene("Loading", function() {
+        Crafty.load(["../../img/crate.png", "../../img/OSDM_Fnt32x32_SyntaxTerror-Copy2.png"], function() {
+            Crafty.scene("Game");
+        });
+    });
+    
+    // start with the Loading scene
+    Crafty.scene("Loading");
+    
 });
