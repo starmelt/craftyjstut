@@ -74,7 +74,7 @@ window.onload = (function() {
             this._board = _.range(cols).map(function(c) {
                 return _.range(rows).map(function(r) {
                     var pos = this._computeBoxPos(x, y, c, r, BOX_WIDTH, BOX_HEIGHT);
-                    var color = this.COLORS[Crafty.randRange(0, 4)];
+                    var color = this.COLORS[Crafty.math.randomInt(0, 4)];
                     return Crafty.e("Box").makeBox(pos.x, pos.y, color, _.bind(this._clickHandler, this));
                 }, this);
                 return column;

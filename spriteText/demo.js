@@ -55,14 +55,39 @@ window.onload = (function() {
             var ts4 = 32;
             var text4 = Crafty.e("2D, DOM, SpriteText")
                         .attr({x: 0, y: 300, w: txt4.length*ts4, h: ts4})
-                        .registerFont("TSK06", ts2, "../img/TSK06.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ!.\"-")
+                        .registerFont("TSK06", ts4, "../img/TSK06.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ!.\"-")
                         .text(txt4);
                         
             // Add the Mouse Component and change text and font on Click
             text4.addComponent("Mouse");
             text4.bind("Click", function (e) {
                 text4.text("WTF No SPACE char mapped!");
+            });// Write some Text (DOM) using the SyntaxTerror Font (32x32)
+            
+            var txt5 = "Click me to background!";
+            var ts5 = 32;
+            var text5 = Crafty.e("2D, Canvas, SpriteText")
+                        .attr({x: 0, y: 400, z: 1, w: txt5.length*ts5, h: ts5})
+                        .font("TSK06")
+                        .text(txt5);
+            // Add the Mouse Component and change text and font on Click
+            text5.addComponent("Mouse");
+            text5.bind("Click", function (e) {
+                text5.attr({z: 0});
+                text6.attr({z: 1});
             });
+            // Write some Text (DOM) using the SyntaxTerror Font (32x32)
+            var txt6 = "Click me to background!";
+            var ts6 = 32;
+            var text6 = Crafty.e("2D, Canvas, SpriteText")
+                    .attr({x: 20, y: 410, w: txt6.length*ts6, h: ts6})
+                    .font("SyntaxTerror")
+                    .text(txt6);
+            text6.addComponent("Mouse");
+            text6.bind("Click", function (e) {
+                text5.attr({z: 1});
+                text6.attr({z: 0});
+            }); 
         }
     );
 });
