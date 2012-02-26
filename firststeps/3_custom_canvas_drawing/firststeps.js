@@ -10,8 +10,15 @@ window.onload = (function() {
     Crafty.init(WIDTH, HEIGHT);
 
     Crafty.c("Box", {
+        /*
+         * Setting ready=true is crucial when drawing on the Canvas. Otherwise the "Draw" event will not be triggered.
+         */
+        ready: true,
+        /*
+         * Initialize the component.
+         */
         init: function() {
-            this.addComponent("2D, Canvas, Color, Fourway, Mouse, Tween");
+            this.addComponent("2D, Canvas, Fourway, Mouse, Tween");
 
             this.w = 32;
             this.h = 32;
@@ -69,7 +76,8 @@ window.onload = (function() {
             ctx.stroke();
         },
         makeBox: function(x, y, color) {
-            this.attr({x: x, y: y}).color(color);
+            this.attr({x: x, y: y});
+            this._color = color;
         }
     });
 
